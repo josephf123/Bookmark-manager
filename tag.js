@@ -84,11 +84,11 @@ function findBox(num){
     });
 }
 //Work on this to make it set the storage as the old one plus the new one
-function setStorage(id, type){
-    let prev = await stored(id)
-    let new = prev + 
-    chrome.storage.local.set({[id]:  })
-}
+// function setStorage(id, type){
+//     let prev = await stored(id)
+//     let new = prev + 
+//     chrome.storage.local.set({[id]:  })
+// }
 
 
 function grid(x,y){
