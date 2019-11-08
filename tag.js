@@ -77,18 +77,41 @@ function findBox(num){
     $(".grid").on("click", function() {
         let col = this.id.slice(0,1)
         let rowId = this.id.slice(1)
-        console.log(col)
-        console.log(rowId)
+        setStorage(rowId, col)
 
         
     });
 }
 //Work on this to make it set the storage as the old one plus the new one
-// function setStorage(id, type){
-//     let prev = await stored(id)
-//     let new = prev + 
-//     chrome.storage.local.set({[id]:  })
-// }
+async function setStorage(id, type){
+    let tags = await stored("tags")
+    let tagIndex, newTag;
+    tags = tags.split(",")
+    console.log(tags)
+    let alph = "abcdefghijklmnopqrstuvwxyz".split("")
+    console.log(typeof alph)
+    console.log(alph)
+    for(var i=0; i < alph.length;i++){
+        if(alph[i] == type){
+            tagIndex = i
+            break
+        }
+        
+    }
+    let prev = await stored(id)
+    console.log(prev)
+    if(prev){
+        newTag = prev + "," + tags[tagIndex]
+    }
+    else {
+        newTag = tags[tagIndex]
+    }
+    chrome.storage.local.set({[id]: newTag}, function() {
+        console.log(newTag)
+    })
+
+    
+}
 
 
 function grid(x,y){

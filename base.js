@@ -18,26 +18,35 @@ document.addEventListener('DOMContentLoaded', async function () {
     $("#tags").on("click", function (){
         window.location.href = "test.html"
     })
+    $("#clearTags").on("click", function (){
+        clearTags(result)
+        document.location.reload()
+    })
     chrome.storage.local.set({["tags"]:"Work,Entertainment,For Later,Sports,Philosophy,Music,Funny"})
-    //Make sure there is a way I can access the stored value with the id as the key
-    //store("430")
+
     
 
 })
 
-function saveData(obj){
-    let id = obj.id
-    chrome.storage.local.set({[id]: "bookmark"}, function(){
-        console.log("The value is bookmark lol")
-    })
+function clearTags(res){
+    for(var i=0; i < res.length;i++){
+        if(res[i].children){
+            clearTags(res[i].children)
+        }
+        else{
+            let resId = res[i].id
+            chrome.storage.local.remove(resId, function(){
+                console.log("The value is bookmark lol")
+            })
+        }
+    }
+    
     
 }
 
-var store = function (id){
+var stored = function (id){
     return new Promise(function (resolve, reject){
         chrome.storage.local.get([id], function (res) {
-            console.log(res[id])
-            console.log("///////////////////////////")
             resolve(res[id])
     
         })
@@ -49,13 +58,13 @@ function initialize(){
         if (result[i].children){  
             let folder = new Folder(result, result[i])
             printFolder(folder)
-            saveData(folder.object)
+            //removeData(folder.object)
             
         }
         else if (!result[i].children){
             let bookmark = new Bookmark(result, result[i])
             printBookmark(bookmark)
-            saveData(bookmark.object)
+            //removeData(bookmark.object)
         }
     }
     $(".folder").each( function () {
@@ -72,9 +81,13 @@ function initialize(){
 }
 
 async function tagOpen(object, id){
-    let tags = ["Work", "Entertainment", "For later"]
+    let tags = await stored(id)
+    if (tags){
+        tags = tags.split(",")
+    }
+    
     let tagList = []
-    let text = "HI there it's a me " + await store(id)
+    let text = "HI there it's a me " + await stored(id)
     let test = $('<div>',{
         "class":  "btn-primary test d-block-flex",
         "text": "Tags: "
@@ -83,13 +96,15 @@ async function tagOpen(object, id){
         window.el = $(this);
           myTimeout = setTimeout(function() {
             $("#b" + id).after(test)
-            for(var i=tags.length -1 ; i >= 0; i--){
-                let tag = $('<div>',{
-                    "class": "btn-danger test d-inline-flex my-3 p-2",
-                    "text": tags[i]
-                })
-                tagList.push(tag)
-                test.after(tag)
+            if (tags){
+                for(var i=tags.length -1 ; i >= 0; i--){
+                    let tag = $('<div>',{
+                        "class": "btn-danger test d-inline-flex my-3 p-2",
+                        "text": tags[i]
+                    })
+                    tagList.push(tag)
+                    test.after(tag)
+                }
             }
           }, 500);
       }).mouseleave(function() {
