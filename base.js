@@ -1,3 +1,5 @@
+// Gotten rid of some features due to bugs. Now trying to get the program to detect when only the icon is clicked.
+//Working in BookmarkFolder.js
 var result;
 
 var search = new Promise(function (resolve, reject) {
@@ -22,11 +24,29 @@ document.addEventListener('DOMContentLoaded', async function () {
         clearTags(result)
         document.location.reload()
     })
-    chrome.storage.local.set({["tags"]:"Work,Entertainment,For Later,Sports,Philosophy,Music,Funny"})
+    showModal()
+    chrome.storage.local.set({"tags":"Work,Entertainment,For Later,Sports,Philosophy,Music,Funny"})
 
     
 
 })
+
+async function showModal(){
+    let tag = await stored("tags")
+    tag = tag.split(',')
+    for(var i=tag.length; i >= 0; i--){
+        let tagName = $("<div>", {
+            "text": tag[i]
+        })
+        if ((i + 1) % 2 == 0){
+            tagName.css("border-top", "1px solid #dee2e6")
+            tagName.css("border-bottom", "1px solid #dee2e6")
+        }
+        
+        $("#modal-information").append(tagName)
+    }
+}
+
 
 function clearTags(res){
     for(var i=0; i < res.length;i++){
@@ -73,7 +93,7 @@ function initialize(){
 
     })
     $(".btn").each( function(){
-        let testId = this.id
+        let testId = String(this.id)
         let object = findIt(result, testId)
         tagOpen(object, testId)
     }) 
@@ -82,39 +102,41 @@ function initialize(){
 
 async function tagOpen(object, id){
     let tags = await stored(id)
+
     if (tags){
         tags = tags.split(",")
     }
     
     let tagList = []
-    let text = "HI there it's a me " + await stored(id)
     let test = $('<div>',{
         "class":  "btn-primary test d-block-flex",
         "text": "Tags: "
     })
-    $('#' + id).mouseenter(function() {
-        window.el = $(this);
-          myTimeout = setTimeout(function() {
-            $("#b" + id).after(test)
-            if (tags){
-                for(var i=tags.length -1 ; i >= 0; i--){
-                    let tag = $('<div>',{
-                        "class": "btn-danger test d-inline-flex my-3 p-2",
-                        "text": tags[i]
-                    })
-                    tagList.push(tag)
-                    test.after(tag)
-                }
-            }
-          }, 500);
-      }).mouseleave(function() {
-          clearTimeout(myTimeout);
-          test.remove()
-          for(var i=0; i < tagList.length;i++){
-              tagList[i].remove()
-          }
+    //Not having this in because it keeps giving "Uncaught (in promise) Error: Syntax error, unrecognized expression: #" error
 
-      });
+    // $('#' + id).mouseenter(function() {
+    //     window.el = $(this);
+    //       myTimeout = setTimeout(function() {
+    //         $("#b" + id).after(test)
+    //         if (tags){
+    //             for(var i=tags.length -1 ; i >= 0; i--){
+    //                 let tag = $('<div>',{
+    //                     "class": "btn-danger test d-inline-flex my-3 p-2",
+    //                     "text": tags[i]
+    //                 })
+    //                 tagList.push(tag)
+    //                 test.after(tag)
+    //             }
+    //         }
+    //       }, 500);
+    //   }).mouseleave(function() {
+    //       clearTimeout(myTimeout);
+    //       test.remove()
+    //       for(var i=0; i < tagList.length;i++){
+    //           tagList[i].remove()
+    //       }
+
+    //   });
     
     
 }

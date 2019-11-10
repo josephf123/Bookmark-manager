@@ -7,15 +7,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     await search;
     console.log(result)
     let colNum = await findColNum()
-    await titles()
+    await title()
     grid(colNum + 1,counting(result))
     clickRemove()
-
     findBox(colNum)
 })
 
 
-async function titles(){
+
+async function title(){
     console.log("hihihi")
     let colours = ["#ED6A5A", "#F4F1BB", "#9BC1BC", "#2CC1CC", "#E6EBE0", "#4C56DB", "#916482"]
     let colNames = await stored("tags")

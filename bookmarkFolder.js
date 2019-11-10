@@ -88,7 +88,6 @@ function printBookmark(object) {
             newDiv = $('<div>', {
                 "class": "bookmark btn col-2 m-3 btn-sm",
                 "style": "background-color: #2BBBAD; font-size: 120%;",
-                "text": object.title,
                 "id": object.id
             })
             break;
@@ -96,7 +95,6 @@ function printBookmark(object) {
             newDiv = $('<button>', {
                 "class": "bookmark btn d-inline-flex col-2 m-4 btn-danger btn-sm",
                 "style": "font-size: 120%; color: black",
-                "text": object.title,
                 "id": object.id
 
             })
@@ -105,7 +103,6 @@ function printBookmark(object) {
             newDiv = $('<button>', {
                 "class": "bookmark btn d-inline-flex col-2 m-4 btn-sm",
                 "style": "background-color: #ff5722;font-size: 120% ",
-                "text": object.title,
                 "id": object.id
             })
             break;
@@ -113,7 +110,6 @@ function printBookmark(object) {
             newDiv = $('<button>', {
                 "class": "bookmark btn d-inline-flex col-2 m-4 btn-dark-green btn-sm text-light",
                 "style": "background-color: #673ab7; font-size: 120%",
-                "text": object.title,
                 "id": object.id,
             })
     }
@@ -124,23 +120,32 @@ function printBookmark(object) {
         "id": "a" + object.id
         
     })    
-    $(newDiv).hover(function () {
-        $(this).css("color", "white");
-    }, function () {
-        $(this).css("color", "black");
-    });
-
+    
     
 
-    newDiv.appendTo(newClickable);
+    let rowDivision = $("<div class='row undo'></div>")
+    let textOnly = $("<p>",{
+        "style": "width:80%",
+        "class":"d-flex",
+        "text": object.title
+    })
     let icon = $('<i>',{
-        "class": "d-flex material-icons icon",
+        "class": "d-flex material-icons icon mt-1",
         "id": "b" + object.id,
         "text": "info",
-        "style": "float: right"
+        "style": "float: right;"
     })
-    icon.appendTo(newDiv)
-    icon.addClass("ml-0")
+    textOnly.appendTo(rowDivision)
+    icon.appendTo(rowDivision)
+    rowDivision.appendTo(newDiv)
+    newDiv.appendTo(newClickable);
+    newDiv.hover(function () {
+        textOnly.css("color", "white");
+    }, function () {
+        textOnly.css("color", "black");
+    });
+    
+    
     if (arguments.length == 2) {
         if (arguments[1] == 1){
             let popDiv = "#popDiv"
