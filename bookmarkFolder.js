@@ -121,7 +121,6 @@ function printBookmark(object) {
         
     })    
     
-    
 
     let rowDivision = $("<div class='row undo'></div>")
     let textOnly = $("<p>",{
@@ -130,13 +129,12 @@ function printBookmark(object) {
         "text": object.title
     })
     let icon = $('<i>',{
-        "class": "d-flex material-icons icon mt-1",
+        "class": "d-inline-flex material-icons icon mt-1",
         "id": "b" + object.id,
         "text": "info",
-        "style": "float: right;"
+        "style": "z-index:1;position:relative;left:-50px"
     })
     textOnly.appendTo(rowDivision)
-    icon.appendTo(rowDivision)
     rowDivision.appendTo(newDiv)
     newDiv.appendTo(newClickable);
     newDiv.hover(function () {
@@ -157,6 +155,7 @@ function printBookmark(object) {
     else {
         let parent = "#load"
         newClickable.appendTo(parent)
+        icon.appendTo(newClickable)
     }
 }
 
