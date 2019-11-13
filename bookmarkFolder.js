@@ -122,19 +122,28 @@ function printBookmark(object) {
     })    
     
 
-    let rowDivision = $("<div class='row undo'></div>")
+    let rowDivision = $("<div class='row undo' style='overflow-wrap: break-word;'></div>")
     let textOnly = $("<p>",{
-        "style": "width:80%",
+        "style": "width:70%;",
         "class":"d-flex",
         "text": object.title
     })
+
+    if (object.title.length >= 50){
+        textOnly.css("font-size", "80%")
+    }
+    
     let icon = $('<i>',{
         "class": "d-inline-flex material-icons icon mt-1",
         "id": "b" + object.id,
         "text": "info",
-        "style": "z-index:1;position:relative;left:-50px"
+        "style": "z-index:1;position:relative;right:70px"
+    })
+    let emptySpace = $('<p>',{
+        "style": "width:20%"
     })
     textOnly.appendTo(rowDivision)
+    emptySpace.appendTo(rowDivision)
     rowDivision.appendTo(newDiv)
     newDiv.appendTo(newClickable);
     newDiv.hover(function () {
