@@ -16,7 +16,7 @@
 .main {
     text-decoration: none
 }
-.undo {
+.margin {
   margin-left: 15px;
   margin-right: 15px;
 }
@@ -32,7 +32,7 @@
                 <a class="navbar-brand" id="mostPop" href="#">Most popular</a>
                 <a class="navbar-brand" id="tags" href="#">Tags</a>
                 <a class="navbar-brand" id="clearTags" href="#">Clear Tags</a>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                <button id="launchTagModal" type="button" class="btn btn-primary">
                     Launch demo modal
                   </button>
               </div>
@@ -49,7 +49,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Tags</h5>
+                  <h5 id="modalTitle" class="modal-title"></h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>

@@ -24,17 +24,56 @@ document.addEventListener('DOMContentLoaded', async function () {
         clearTags(result)
         document.location.reload()
     })
-    showModal()
+    $("i").on("click", function(){
+        let id = this.id.slice(1)
+        displayModalInfo(id)
+        
+    })
+    $("#launchTagModal").on("click", function(){
+        launchTagModal()
+    })
     chrome.storage.local.set({"tags":"Work,Entertainment,For Later,Sports,Philosophy,Music,Funny"})
 
     
 
 })
+async function displayModalInfo(identification) {
+    $("#modal-information").empty()
+    let data = findIt(result, identification)
+    console.log(data)
+    let tags = await stored(identification)
+    tags = tags.split(",")
+    let row = $("<div class='row margin'></div>")
+    let urlTitle = $("<div>URL: </div>")
+    let url = $("<a>",{
+        href: data.url,
+        text: data.url
+    })
+    urlTitle.appendTo(row)
+    url.appendTo(row)
+    $("#modalTitle").text(data.title)
+    $("#modal-information").append(row)
+    let tagParagraph = $("<p class='margin' style='margin-bottom:0px'>Tags:</p>")
+    let ul = $("<ul class='margin'>")
+    for(var i=0;i < tags.length; i++){
+        let tag = $("<li>", {
+            text: tags[i],
+            class: "margin"
+        })
+        tag.appendTo(ul)
+    }
+    $("#modal-information").append(tagParagraph)
+    $("#modal-information").append(ul)
+    $("#exampleModalCenter").modal('show')
+}
 
-async function showModal(){
+async function launchTagModal(){
+    $("#modal-information").empty()
+    $("#modalTitle").text("Tags")
     let tag = await stored("tags")
     tag = tag.split(',')
-    for(var i=tag.length; i >= 0; i--){
+    console.log(tag)
+    for(var i=0; i < tag.length; i++){
         let tagName = $("<div>", {
             "text": tag[i]
         })
@@ -45,6 +84,8 @@ async function showModal(){
         
         $("#modal-information").append(tagName)
     }
+    $("#exampleModalCenter").modal('show')
+
 }
 
 
@@ -67,7 +108,12 @@ function clearTags(res){
 var stored = function (id){
     return new Promise(function (resolve, reject){
         chrome.storage.local.get([id], function (res) {
-            resolve(res[id])
+            if (res[id]){
+                resolve(res[id])
+            }
+            else{
+                resolve("none")
+            }
     
         })
     })

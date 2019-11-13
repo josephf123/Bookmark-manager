@@ -129,7 +129,7 @@ function printBookmark(object) {
     })    
     
 
-    let rowDivision = $("<div class='row undo' style='overflow-wrap: break-word;'></div>")
+    let rowDivision = $("<div class='row margin' style='overflow-wrap: break-word;'></div>")
     let textOnly = $("<p>",{
         "style": "width:70%;",
         "class":"d-flex",
@@ -145,6 +145,14 @@ function printBookmark(object) {
         "id": "b" + object.id,
         "text": "info",
         "style": "z-index:1;position:relative;right:60px"
+    })
+    icon.hover(function(){
+        icon.css("cursor", "pointer")
+        icon.css("color", "white")
+    }, function(){
+        icon.css("cursor", "default")
+        icon.css("color", "black")
+
     })
 
     let emptySpace = $('<p>',{
