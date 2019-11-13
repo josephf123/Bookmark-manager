@@ -65,11 +65,18 @@ function printFolder(object) {
             break;
 
     }
+    let emptySpace = $('<p>',{
+        "style": "width:20%"
+    })
     let bookmarkTitle = $("<p class='p-2'>" + object.title + "</p>")
     bookmarkTitle.appendTo(newDiv);
-    let icon = $('<i class="material-icons p-2">info</i>')
+    let icon = $('<i>',{
+        "class": "d-inline-flex material-icons icon mt-1",
+        "id": "b" + object.id,
+        "text": "info",
+        "style": "z-index:1;position:relative;"
+    })
     icon.appendTo(newDiv)
-    icon.addClass("ml-auto")
     
     if (arguments.length == 2) {
         var parent = "#" + String(arguments[1].id)
@@ -137,11 +144,13 @@ function printBookmark(object) {
         "class": "d-inline-flex material-icons icon mt-1",
         "id": "b" + object.id,
         "text": "info",
-        "style": "z-index:1;position:relative;right:70px"
+        "style": "z-index:1;position:relative;right:60px"
     })
+
     let emptySpace = $('<p>',{
         "style": "width:20%"
     })
+    
     textOnly.appendTo(rowDivision)
     emptySpace.appendTo(rowDivision)
     rowDivision.appendTo(newDiv)
@@ -151,7 +160,6 @@ function printBookmark(object) {
     }, function () {
         textOnly.css("color", "black");
     });
-    
     
     if (arguments.length == 2) {
         if (arguments[1] == 1){
@@ -164,7 +172,8 @@ function printBookmark(object) {
     else {
         let parent = "#load"
         newClickable.appendTo(parent)
-        icon.appendTo(newClickable)
+        newClickable.after(icon)
+
     }
 }
 
