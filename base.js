@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     initialize(); 
     onPopClick();
     renderPop();
+    iconEvent();
     $("#tags").on("click", function (){
         window.location.href = "test.html"
     })
@@ -24,11 +25,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         clearTags(result)
         document.location.reload()
     })
-    $("i").on("click", function(){
-        let id = this.id.slice(1)
-        displayModalInfo(id)
-        
-    })
+
     $("#launchTagModal").on("click", function(){
         launchTagModal()
     })
@@ -65,6 +62,13 @@ async function displayModalInfo(identification) {
     $("#modal-information").append(tagParagraph)
     $("#modal-information").append(ul)
     $("#exampleModalCenter").modal('show')
+}
+
+function iconEvent(){
+    $("i").on("click", function(){
+        let id = this.id.slice(1)
+        displayModalInfo(id)
+    })
 }
 
 async function launchTagModal(){
@@ -255,6 +259,8 @@ function onClickOpen(object) {
         else {
             clickClose(object, 1)
         }
+        $("i").off("click")
+        iconEvent()
 
     })
 
@@ -267,11 +273,12 @@ function clickClose(obj) {
     for (var i = 0; i < obj.children.length; i++) {
         if (obj.children[i].children) {
             clickClose(obj.children[i])
-
         }
         let stringId = "#" + String(obj.children[i].id)
         $(stringId).removeClass("open")
         $(stringId).remove()
+        $("#b" + obj.children[i].id).remove()
+        console.log("successfully killed" + stringId)
 
     }
     $(objId).removeClass("open");

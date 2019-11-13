@@ -155,6 +155,7 @@ function printBookmark(object) {
 
     })
 
+
     let emptySpace = $('<p>',{
         "style": "width:20%"
     })
@@ -168,7 +169,7 @@ function printBookmark(object) {
     }, function () {
         textOnly.css("color", "black");
     });
-    
+
     if (arguments.length == 2) {
         if (arguments[1] == 1){
             let popDiv = "#popDiv"
@@ -180,8 +181,9 @@ function printBookmark(object) {
     else {
         let parent = "#load"
         newClickable.appendTo(parent)
-        newClickable.after(icon)
 
     }
+    newClickable.after(icon)
+
 }
 
