@@ -65,12 +65,6 @@ function printBookmark(bookmark, x){
 
 }
 
-
-
-
-
-
-
 switch(i){    
     case 0: 
         $($div).hover(function () {
@@ -125,4 +119,27 @@ switch(i){
         console.log("What the mario")
         break
         
+}
+
+
+function reverseFindIt(data, title, url){
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].children) {
+            if (data[i].title == title && data[i].url == url) {
+                identification = data[i].id
+            }
+            else {
+                reverseFindIt(data[i].children, title, url)
+            }
+        }
+        else {
+            if (data[i].title == title && data[i].url == url) {
+                identification = data[i]
+            }
+        }
+    }
+    if (identification) {
+        return identification
+    }
+    
 }

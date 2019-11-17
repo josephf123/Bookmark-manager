@@ -100,7 +100,7 @@ function printBookmark(object) {
             break;
         case 2:
             newDiv = $('<button>', {
-                "class": "bookmark btn d-inline-flex col-2 m-4 btn-danger btn-sm",
+                "class": "bookmark btn d-inline-flex col-2 m-3 btn-danger btn-sm",
                 "style": "font-size: 120%; color: black",
                 "id": object.id
 
@@ -108,14 +108,14 @@ function printBookmark(object) {
             break;
         case 3:
             newDiv = $('<button>', {
-                "class": "bookmark btn d-inline-flex col-2 m-4 btn-sm",
+                "class": "bookmark btn d-inline-flex col-2 m-3 btn-sm",
                 "style": "background-color: #ff5722;font-size: 120% ",
                 "id": object.id
             })
             break;
         case 4:
             newDiv = $('<button>', {
-                "class": "bookmark btn d-inline-flex col-2 m-4 btn-dark-green btn-sm text-light",
+                "class": "bookmark btn d-inline-flex col-2 m-3 btn-dark-green btn-sm text-light",
                 "style": "background-color: #673ab7; font-size: 120%",
                 "id": object.id,
             })

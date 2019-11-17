@@ -26,16 +26,70 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.location.reload()
     })
 
+    $("#clearInfo").on("click", function (){
+        clearInfo(result)
+    })
+
     $("#launchTagModal").on("click", function(){
         launchTagModal()
     })
+    $("#saveChangesModal").on("click", function(){
+        let modalInfo = $("#modal-information")
+        let modalContentId = $(".modal-content")[0].id
+        let modalObject = findIt(result, modalContentId)
+        let textModal = modalInfo[0].children[5].value
+        let titleModal = modalObject.title
+        let urlModal = modalObject.url
+        saveChangesModal(modalContentId,textModal)
+    })
+    
     chrome.storage.local.set({"tags":"Work,Entertainment,For Later,Sports,Philosophy,Music,Funny"})
 
     
 
 })
+
+function clearInfo(res){
+    for(var i=0; i < res.length;i++){
+        if(res[i].children){
+            clearTags(res[i].children)
+        }
+        else{
+            let resId = "i" + res[i].id
+            chrome.storage.local.remove(resId, function(){
+                console.log("All are cleared")
+            })
+        }
+    }
+}
+
+
+function clearTags(res){
+    for(var i=0; i < res.length;i++){
+        if(res[i].children){
+            clearTags(res[i].children)
+        }
+        else{
+            let resId = res[i].id
+            chrome.storage.local.remove(resId, function(){
+                console.log("All are cleared")
+            })
+        }
+    }
+    
+    
+}
+
+async function saveChangesModal(id, text){
+    let key = "i" + id
+    await makeStorage(key, text)
+
+}
+
+
 async function displayModalInfo(identification) {
     $("#modal-information").empty()
+    $(".modal-content").attr('id', identification)
     let data = findIt(result, identification)
     console.log(data)
     let tags = await stored(identification)
@@ -51,7 +105,7 @@ async function displayModalInfo(identification) {
     $("#modalTitle").text(data.title)
     $("#modal-information").append(row)
     let tagParagraph = $("<p class='margin' style='margin-bottom:0px'>Tags:</p>")
-    let ul = $("<ul class='margin'>")
+    let ul = $("<ul class='margin' style='margin-bottom:-10px'>")
     for(var i=0;i < tags.length; i++){
         let tag = $("<li>", {
             text: tags[i],
@@ -59,10 +113,22 @@ async function displayModalInfo(identification) {
         })
         tag.appendTo(ul)
     }
+    let infoTitle = $("<p class='margin d-inline-flex'>Info:</p>")
+    let infoSubscript = $("<p class='margin d-inline-flex' style='float:right; color: #A9A9A9'>max chars: 200</p>")
+    let textInformation = await stored("i" + identification)
+    if (textInformation == "none"){
+        textInformation = ""
+    }
+    let textbox = $("<textarea>", {row: "5", style: "margin-left: 45px; width:405px;", text: textInformation, maxlength: "200"})
     $("#modal-information").append(tagParagraph)
     $("#modal-information").append(ul)
+    $("#modal-information").append(infoTitle)
+    $("#modal-information").append(infoSubscript)
+    $("#modal-information").append(textbox)
     $("#exampleModalCenter").modal('show')
 }
+
+
 
 function iconEvent(){
     $("i").on("click", function(){
@@ -101,7 +167,7 @@ function clearTags(res){
         else{
             let resId = res[i].id
             chrome.storage.local.remove(resId, function(){
-                console.log("The value is bookmark lol")
+                console.log("All are cleared")
             })
         }
     }
@@ -120,6 +186,13 @@ var stored = function (id){
             }
     
         })
+    })
+}
+
+var makeStorage = function (id, text){
+    return new Promise(function (resolve, reject){
+        chrome.storage.local.set({[id]: text})
+        resolve(text)
     })
 }
 
@@ -210,6 +283,28 @@ function findIt(data, objectId) {
     if (objectValue) {
         return objectValue
     }
+}
+
+function reverseFindIt(data, title, url){
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].children) {
+            if (data[i].title == title && data[i].url == url) {
+                identification = data[i].id
+            }
+            else {
+                reverseFindIt(data[i].children, title, url)
+            }
+        }
+        else {
+            if (data[i].title == title && data[i].url == url) {
+                identification = data[i].id
+            }
+        }
+    }
+    if (identification) {
+        return identification
+    }
+    
 }
 
 
