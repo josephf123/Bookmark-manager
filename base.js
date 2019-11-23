@@ -42,12 +42,23 @@ document.addEventListener('DOMContentLoaded', async function () {
         let urlModal = modalObject.url
         saveChangesModal(modalContentId,textModal)
     })
+    $("#searchButton").on("keyup", function(e) {
+        searchFun(e.target.value)
+    })
     
     chrome.storage.local.set({"tags":"Work,Entertainment,For Later,Sports,Philosophy,Music,Funny"})
 
     
 
 })
+
+function searchFun(input){
+    for(var i=0; i < result.length; i++){
+        if (result[i].title){
+            console.log("Make this a search thing")
+        }
+    }
+}
 
 function clearInfo(res){
     for(var i=0; i < res.length;i++){
