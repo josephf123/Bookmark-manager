@@ -119,7 +119,11 @@ async function displayModalInfo(identification) {
     if (textInformation == "none"){
         textInformation = ""
     }
-    let textbox = $("<textarea>", {row: "5", style: "margin-left: 45px; width:405px;", text: textInformation, maxlength: "200"})
+    let textbox = $("<textarea>", {
+        row: "5",
+        style: "margin-left: 45px; width:405px;", 
+        text: textInformation, maxlength: "200", 
+        class : "form-control"})
     $("#modal-information").append(tagParagraph)
     $("#modal-information").append(ul)
     $("#modal-information").append(infoTitle)
