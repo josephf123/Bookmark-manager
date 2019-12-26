@@ -1,5 +1,3 @@
-// Gotten rid of some features due to bugs. Now trying to get the program to detect when only the icon is clicked.
-//Working in BookmarkFolder.js
 var result;
 
 var search = new Promise(function (resolve, reject) {
@@ -43,9 +41,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         saveChangesModal(modalContentId,textModal)
     })
     $("#searchButton").on("keyup", function(e) {
+        console.log(e.target.value)
         searchFun(e.target.value)
     })
-    
     chrome.storage.local.set({"tags":"Work,Entertainment,For Later,Sports,Philosophy,Music,Funny"})
 
     
@@ -53,11 +51,39 @@ document.addEventListener('DOMContentLoaded', async function () {
 })
 
 function searchFun(input){
-    for(var i=0; i < result.length; i++){
-        if (result[i].title){
-            console.log("Make this a search thing")
-        }
+    let all = $("#load").children()
+    for(var i=0; i < all.length; i++){
+        all[i].remove()
     }
+    input = String(input).toLowerCase();
+    for(var i=0; i < result.length; i++){
+        let title = result[i].title.toLowerCase()
+        if (title.includes(input)){
+            console.log("The thing is " + result[i].title)
+            if (!result[i].children){
+                console.log("This is is ")
+                let bookmark = new Bookmark(result, result[i])
+                printBookmark(bookmark)
+            }
+            else if (result[i].children){
+                let folder = new Folder(result, result[i])
+                printFolder(folder)
+            }
+
+        }
+        else {
+            if(result[i].children){
+                $("#" + result[i].id).remove()
+            }
+            else{
+                $("#a" + result[i].id).remove()
+                $("#b" + result[i].id).remove()
+            }
+            
+        }
+
+    }
+    iconEvent()
 }
 
 function clearInfo(res){
