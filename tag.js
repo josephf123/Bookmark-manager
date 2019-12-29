@@ -261,9 +261,9 @@ function printFolder(folder, x){
     div.appendTo(rowDiv)
     for(var i=0; i < (x - 1); i++){
         let identification = String(alph[i]) + String(folder.id)
-        let styleAttribute = ""
+        let styleAttribute = "border-bottom: 1px solid; "
         if (i%2==0){
-            styleAttribute += "border-left: 1px solid;border-right: 1px solid"
+            styleAttribute += "border-left: 1px solid;border-right: 1px solid;"
         }
         let $div = $("<div>", {"class":"grid p-1 flex-fill", id: identification, "style": styleAttribute})
         $div.appendTo(rowDiv)
@@ -359,9 +359,9 @@ async function printBookmark(bookmark, x){
     div.appendTo(rowDiv)
     for(var i=0; i < (x - 1); i++){
         let identification = String(alph[i]) + String(bookmark.id)
-        let styleAttribute = ""
+        let styleAttribute = "border-bottom: 1px solid; "
         if (i%2==0){
-            styleAttribute += "border-left: 1px solid;border-right: 1px solid"
+            styleAttribute += "border-left: 1px solid;border-right: 1px solid;"
         }
         let $div = $("<div>", {"class": "grid p-1 flex-fill", id: identification, "style": styleAttribute})
         $div.appendTo(rowDiv)
