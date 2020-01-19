@@ -1,3 +1,10 @@
+//Things to do before release,
+// Make pop work again
+// Add and delete tags
+//Make the tags visible in the tag menu
+// rename nav stuff
+//Add settings to change colours of bookmarks etc.
+
 var result;
 
 var search = new Promise(function (resolve, reject) {
