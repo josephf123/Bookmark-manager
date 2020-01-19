@@ -71,7 +71,7 @@ function printFolder(object) {
     let bookmarkTitle = $("<p class='p-2'>" + object.title + "</p>")
     bookmarkTitle.appendTo(newDiv);
     let icon = $('<i>',{
-        "class": "d-inline-flex material-icons icon mt-1",
+        "class": "d-inline-flex material-icons icon mt-1 item-info",
         "id": "b" + object.id,
         "text": "info",
         "style": "z-index:1;position:relative;"
@@ -141,7 +141,7 @@ function printBookmark(object) {
     }
     
     let icon = $('<i>',{
-        "class": "d-inline-flex material-icons icon mt-1",
+        "class": "d-inline-flex material-icons icon mt-1 item-info",
         "id": "b" + object.id,
         "text": "info",
         "style": "z-index:1;position:relative;right:60px"

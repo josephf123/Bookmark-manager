@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     console.log(result)
     initialize(); 
     onPopClick();
-    renderPop();
     iconEvent();
     $("#tags").on("click", function (){
         window.location.href = "test.html"
@@ -31,6 +30,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     $("#launchTagModal").on("click", function(){
         launchTagModal()
     })
+
+    $(".delete-tag").on("click", function(){
+        console.log("hihihih")
+        let id = this.id
+        console.log(id)
+    })
+
     $("#saveChangesModal").on("click", function(){
         let modalInfo = $("#modal-information")
         let modalContentId = $(".modal-content")[0].id
@@ -45,8 +51,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         searchFun(e.target.value)
     })
     chrome.storage.local.set({"tags":"Work,Entertainment,For Later,Sports,Philosophy,Music,Funny"})
+    
 
     
+
 
 })
 
@@ -61,7 +69,6 @@ function searchFun(input){
         if (title.includes(input)){
             console.log("The thing is " + result[i].title)
             if (!result[i].children){
-                console.log("This is is ")
                 let bookmark = new Bookmark(result, result[i])
                 printBookmark(bookmark)
             }
@@ -69,22 +76,51 @@ function searchFun(input){
                 let folder = new Folder(result, result[i])
                 printFolder(folder)
             }
+    
+        }
+        else{
+            $("#a" + result[i].id).remove()
+            $("#b" + result[i].id).remove()
+        }
+        if(result[i].children){
+            console.log(result[i].children)
+            for (var x=0; x < result[i].children.length; x++){
+                let data = result[i].children
+                let title = data[x].title.toLowerCase()
+                if (title.includes(input)){
+                    //Make it so that if input matches with child of folder, only output folder. Right now there is a problem with duplication so try and fix that
+                    console.log("The thing is " + data[x].title)
+                    let bookmark = new Bookmark(result, data[x])
+                    printBookmark(bookmark)
+
+                }
+                else{
+                    if (data[x].children){
+                        $("#" + result[i].id).remove()
+                    }
+                    else {
+                        $("#a" + result[i].id).remove()
+                        $("#b" + result[i].id).remove()
+                    }
+
+                }
+            }
 
         }
-        else {
-            if(result[i].children){
-                $("#" + result[i].id).remove()
-            }
-            else{
-                $("#a" + result[i].id).remove()
-                $("#b" + result[i].id).remove()
-            }
+
+        
             
-        }
 
+    
     }
+    
     iconEvent()
+    initializeFolderOpen()
 }
+
+
+
+
 
 function clearInfo(res){
     for(var i=0; i < res.length;i++){
@@ -172,7 +208,7 @@ async function displayModalInfo(identification) {
 
 
 function iconEvent(){
-    $("i").on("click", function(){
+    $(".item-info").on("click", function(){
         let id = this.id.slice(1)
         displayModalInfo(id)
     })
@@ -185,19 +221,36 @@ async function launchTagModal(){
     tag = tag.split(',')
     console.log(tag)
     for(var i=0; i < tag.length; i++){
+
         let tagName = $("<div>", {
-            "text": tag[i]
+            "text": tag[i],
+            "class": "d-flex ",
+            "style": "vertical-align: middle"
         })
+        let button = $("<button>", {
+            "class": "d-flex btn ml-auto delete-tag",
+            "text": "delete",
+            "style": "float:left",
+            "id": tag[i], 
+        })
+        
+        tagName.append(button)
+        // let icon = $('<i>',{
+        //     "class": "d-inline-flex material-icons icon align-middle delete-tag",
+        //     "id": tag[i],
+        //     "text": "delete",
+        //     "style": "z-index:1"
+        // })
         if ((i + 1) % 2 == 0){
             tagName.css("border-top", "1px solid #dee2e6")
             tagName.css("border-bottom", "1px solid #dee2e6")
         }
-        
         $("#modal-information").append(tagName)
     }
     $("#exampleModalCenter").modal('show')
 
 }
+
 
 
 function clearTags(res){
@@ -251,58 +304,17 @@ function initialize(){
             //removeData(bookmark.object)
         }
     }
+    initializeFolderOpen()
+    
+    
+}
+
+function initializeFolderOpen(){
     $(".folder").each( function () {
         let object = findIt(result, this.id)
         onClickOpen(object)
 
     })
-    $(".btn").each( function(){
-        let testId = String(this.id)
-        let object = findIt(result, testId)
-        tagOpen(object, testId)
-    }) 
-    
-}
-
-async function tagOpen(object, id){
-    let tags = await stored(id)
-
-    if (tags){
-        tags = tags.split(",")
-    }
-    
-    let tagList = []
-    let test = $('<div>',{
-        "class":  "btn-primary test d-block-flex",
-        "text": "Tags: "
-    })
-    //Not having this in because it keeps giving "Uncaught (in promise) Error: Syntax error, unrecognized expression: #" error
-
-    // $('#' + id).mouseenter(function() {
-    //     window.el = $(this);
-    //       myTimeout = setTimeout(function() {
-    //         $("#b" + id).after(test)
-    //         if (tags){
-    //             for(var i=tags.length -1 ; i >= 0; i--){
-    //                 let tag = $('<div>',{
-    //                     "class": "btn-danger test d-inline-flex my-3 p-2",
-    //                     "text": tags[i]
-    //                 })
-    //                 tagList.push(tag)
-    //                 test.after(tag)
-    //             }
-    //         }
-    //       }, 500);
-    //   }).mouseleave(function() {
-    //       clearTimeout(myTimeout);
-    //       test.remove()
-    //       for(var i=0; i < tagList.length;i++){
-    //           tagList[i].remove()
-    //       }
-
-    //   });
-    
-    
 }
 
 function findIt(data, objectId) {

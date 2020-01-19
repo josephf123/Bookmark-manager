@@ -1,9 +1,27 @@
 function onPopClick() {
     $("#mostPop").click(function () {
+        let filteredList = []
+        let searchVal = $("#searchButton")[0].value
+        searchVal = searchVal.toLowerCase()
         if ($("#load").css("display") == "block") {
             $("#load").css("display", "none")
             $("#popDiv").css("display", "block")
-            
+            for (var i=0; i < result.length; i++){
+                let title = result[i].title.toLowerCase()
+                if (title.includes(searchVal)){
+                    filteredList.push(result[i])
+                }
+                if (result[i].children){
+                    for (var x=0; x < result[i].children.length; x++){
+                        let data = result[i].children
+                        let title = data[x].title.toLowerCase()
+                        if (title.includes(input)){
+                            filteredList.push(data[x])
+                        }
+                    }
+                }
+            }
+            renderPop(filteredList)
 
         }
         else if ($("#load").css("display") == "none") {
@@ -14,13 +32,13 @@ function onPopClick() {
     })
 }
 
-async function renderPop(){
+async function renderPop(data){
     let list = [];
-    await getAllInside(list, result)
+    await getAllInside(list, data)
     let newList = sortDescend(list)
     for (var i=0; i < newList.length; i++){
-        let object = findIt(result,newList[i].id)
-        let bookmark = new Bookmark(result, object)
+        let object = findIt(data,newList[i].id)
+        let bookmark = new Bookmark(data, object)
         printBookmark(bookmark, 1)
     }
 }
