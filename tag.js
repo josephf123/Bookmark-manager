@@ -1,25 +1,51 @@
 //Look at line 86
+//Maybe make it display the page and then after change the colours bcz its taking a while to load
 var result;
 var count = 0;
 var objectValue;
+var colours = ["#ED6A5A", "#F4F1BB", "#9BC1BC", "#2CC1CC", "#E6EBE0", "#4C56DB", "#916482"]
+var alph = "abcdefghijklmnopqrstuvwxyz".split("")
 document.addEventListener('DOMContentLoaded', async function () {
-    
+    console.log(document.readyState)
     await search;
     console.log(result)
     let colNum = await findColNum()
     await title()
-    grid(colNum + 1,counting(result))
+    await grid(colNum + 1,counting(result))
     clickRemove()
-    findBox(colNum)
-})
+    $("#why").on("click"), function(){
+        console.log("testing baby")
+    }
+    // $(".grid").on("click", function() {
+    //     console.log("test")
+    //     let col = this.id.slice(0,1)
+    //     let rowId = this.id.slice(1)
+    //     setStorage(rowId, col)
 
+    // });
+    //findBox()
+})
+window.onload = function (){
+    console.log(document.readyState)
+
+    $("#why").on("click"), function(){
+        console.log("testing baby")
+    }
+}
+window.addEventListener('load', (event) => {
+    console.log('page is fully loaded');
+    $("#why").on("click"), function(){
+        console.log("testing baby")
+    }
+});
 
 
 async function title(){
     console.log("hihihi")
-    let colours = ["#ED6A5A", "#F4F1BB", "#9BC1BC", "#2CC1CC", "#E6EBE0", "#4C56DB", "#916482"]
+
     let colNames = await stored("tags")
     colNames = colNames.split(",")
+    colNames.pop()
     console.log(colNames)
     let $row = $("<div>", {"class": "row d-flex", "style": "flex:1"})
     let $title = $("<div>", {"class": "col-5 p-1", "text": "Bookmark title", "style": "border-style:solid none solid solid; border-width: 1px"})
@@ -38,6 +64,7 @@ async function title(){
 async function tagDisplay(){
     let tag = await stored("tags")
     tag = tag.split(',')
+    tag.pop()
     let encomp = $("<div>", {
         "class": "d-flex flex-row-reverse"
     })
@@ -69,28 +96,28 @@ function counting(result){
 
 async function findColNum(){
     let colNum = await stored("tags")
-    colNum = colNum.split(",").length
+    colNum = colNum.split(",").length -1
     return colNum
 }
 
-function findBox(num){
-    $(".grid").on("click", function() {
-        let col = this.id.slice(0,1)
-        let rowId = this.id.slice(1)
-        setStorage(rowId, col)
+// function findBox(){
+//     $(".grid").on("click", function() {
+//         console.log("test")
+//         let col = this.id.slice(0,1)
+//         let rowId = this.id.slice(1)
+//         setStorage(rowId, col)
 
-        
-    });
-}
+//     });
+// }
 //Work on this to make it set the storage as the old one plus the new one
-async function setStorage(id, type){
+async function setStorage(element, id, type){
+    let index = typeToIndex(type)
     let tags = await stored("tags")
     let tagIndex, newTag;
     tags = tags.split(",")
+    tags.pop()
     console.log(tags)
-    let alph = "abcdefghijklmnopqrstuvwxyz".split("")
-    console.log(typeof alph)
-    console.log(alph)
+    
     for(var i=0; i < alph.length;i++){
         if(alph[i] == type){
             tagIndex = i
@@ -100,21 +127,60 @@ async function setStorage(id, type){
     }
     let prev = await stored(id)
     console.log(prev)
-    if(prev){
-        newTag = prev + "," + tags[tagIndex]
+    if(prev && prev != ","){
+        newTag = prev + tags[tagIndex] + "," 
     }
     else {
-        newTag = tags[tagIndex]
+        newTag = tags[tagIndex] + ","
     }
-    chrome.storage.local.set({[id]: newTag}, function() {
-        console.log(newTag)
+    await makeStorage(id, newTag)
+    console.log(newTag)
+    element.css("background-color", colours[index])
+    element.on("mouseout", function(){
+        simpleHover(element, true, colours[i], "#778899")
     })
-
     
 }
 
+var makeStorage = function (id, text){
+    return new Promise(function (resolve, reject){
+        chrome.storage.local.set({[id]: text})
+        resolve(text)
+    })
+}
 
-function grid(x,y){
+async function removeStorage(element, id, type){
+    let index = typeToIndex(type)
+    let tags = await stored("tags")
+    let tagIndex, newTag;
+    tags = tags.split(",")
+    tags.pop()
+    console.log(tags)
+    for(var i=0; i < alph.length;i++){
+        if(alph[i] == type){
+            tagIndex = i
+            break
+        }
+        
+    }
+    let prev = await stored(id)
+    let str = tags[tagIndex] + ","
+    newTag = prev.replace(str, "")
+    console.log("this is the new tag", newTag)
+    if ((newTag.charAt(newTag.length) != ",")){
+        newTag.concat(",")
+    }
+    console.log(newTag)
+    console.log(typeof newTag)
+    await makeStorage(id, newTag)
+    element.css("background-color", "#778899")
+    element.on("mouseout", function(){
+        simpleHover(element, false, colours[index], "#778899")
+    })
+
+}
+
+async function grid(x,y){
     let size = 0;
     let index;
     let total = 0;
@@ -148,10 +214,10 @@ function grid(x,y){
             
         }
         if (bookmark){
-            printBookmark(val, x)
+            await printBookmark(val, x)
         }
         else {
-            printFolder(val, x)
+            await printFolder(val, x)
         }
     }
 }
@@ -182,6 +248,8 @@ function grid(x,y){
 //     }
 //     $("#grid").html(content);
 // }
+
+//Doesn't work right now (not sure if I even want it in)
 function clickRemove() {
     $("button").on("click", function () {
         console.log(this.id)
@@ -228,8 +296,6 @@ var search = new Promise(function (resolve, reject) {
 var stored = function (id){
     return new Promise(function (resolve, reject){
         chrome.storage.local.get([id], function (res) {
-            console.log(res[id])
-            console.log("///////////////////////////")
             resolve(res[id])
     
         })
@@ -237,13 +303,17 @@ var stored = function (id){
 }
 
 
-function printFolder(folder, x){
-    let alph = "abcdefghijklmnopqrstuvwxyz".split("")
+async function printFolder(folder, x){
+    let globOnline;
+    let folderTag = await stored(String(folder.id))
+    if (folderTag == undefined){
+        globOnline = false
+    }
     let incep = checkIncep(folder)
     let rowDiv = $("<div>", {"class":"row d-flex", id: "r" + String(folder.id)})
     let div = $("<div>", {
         "class": "p-1 col-5",
-        "id": "a" + String(folder.id)
+        "id": "@" + String(folder.id)
     })
     let p = $("<p>", {
         "text": "----".repeat(incep) + folder.title,
@@ -260,76 +330,129 @@ function printFolder(folder, x){
     p.appendTo(div)
     div.appendTo(rowDiv)
     for(var i=0; i < (x - 1); i++){
+        let online;
+        if (!globOnline){
+            online = false
+        }
+        else{
+            online = await checkIfTagged(bookmarkTag, i)
+        }
         let identification = String(alph[i]) + String(folder.id)
         let styleAttribute = "border-bottom: 1px solid; "
         if (i%2==0){
             styleAttribute += "border-left: 1px solid;border-right: 1px solid;"
         }
         let $div = $("<div>", {"class":"grid p-1 flex-fill", id: identification, "style": styleAttribute})
+        $div.on("click", async function(){
+            let type = identification.charAt(0)
+            let id = identification.slice(1)
+            let alreadyThere = checkIfTagged(folderTag, i)
+            if (alreadyThere){
+                console.log("testing")
+                await removeStorage($div, id, type, i)
+            }
+            else{
+                console.log("testing1")
+                await setStorage($div, id, type, i)
+            }
+            
+        })
         $div.appendTo(rowDiv)
-        switch(i){    
-            case 0: 
-                $($div).hover(function () {
-                    $(this).css("background-color", "#ED6A5A")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 1:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#F4F1BB")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 2:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#9BC1BC")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 3:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#2CC1CC")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 4:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#E6EBE0")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 5:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#4C56DB")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 6:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#916482")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            default:
-                console.log("What the mario")
-                break
-                
-        }
+        //First check if it has any tag at all bcz most of them won't
+        simpleHover($div, online, colours[i], "#778899")
     }
     rowDiv.appendTo("#grid")
 }
 
+async function checkIfTagged(fold, index){
+    if (fold != undefined){
+        console.log("this is it bois", fold)
+        let tags = await stored("tags")
+        tags = tags.split(",")
+        tags.pop()
+        console.log(index, "this is index")
+        let thisTag = tags[index]
+        console.log(thisTag)
+        if (fold.includes(thisTag)){
+            console.log("yea baby")
+            return true
+        }
+        else{
+            console.log("who")
 
+            return false
+        }
+    }
+    else {
+        console.log("whaa")
+        return false
+    }
+}
+
+function typeToIndex(type){
+    for(var i=0; i < alph.length;i++){
+        if(alph[i] == type){
+            return i
+        }    
+    }
+    return false
+}
+
+async function checkIfAlready(fold, type){
+    if (fold != undefined){
+        let tags = await stored("tags")
+        let tagIndex
+        tags = tags.split(",")
+        tags.pop()
+        console.log(tags)
+        for(var i=0; i < alph.length;i++){
+            if(alph[i] == type){
+                tagIndex = i
+                break
+            }    
+        }
+        let thisTag = tags[tagIndex]
+
+        if (fold.includes(thisTag)){
+            console.log("yea babes")
+            return true
+        }
+        else{
+            console.log("who")
+
+            return false
+        }
+    }
+    else{
+        console.log("this is epic")
+        console.log(fold)
+        return false
+    }
+
+}
+
+function simpleHover(element, bool, col1, col2){
+    if (!bool){
+        let temp;
+        temp = col1
+        col1 = col2
+        col2 = temp
+    }
+    element.css("background-color", col1)
+    element.hover(function(){
+        $(this).css("background-color", col2)
+    }, function () {
+        $(this).css("background-color", col1)  
+    })
+
+}
 
 async function printBookmark(bookmark, x){
-    let alph = "abcdefghijklmnopqrstuvwxyz".split("")
+    let globOnline = true;
+    let bookmarkTag = await stored(String(bookmark.id))
+    if (bookmarkTag == undefined){
+        globOnline = false
+    }
     let incep = checkIncep(bookmark)
     let btext = bookmark.title
     if (btext.length > 80){
@@ -341,7 +464,7 @@ async function printBookmark(bookmark, x){
     let rowDiv = $("<div>", {"class": "row d-flex", id: "r" + String(bookmark.id)})
     let div = $("<div>", {
         "class": "p-1 col-5",
-        "id": "a" + String(bookmark.id)
+        "id": "@" + String(bookmark.id)
     })
     let a = $("<a>", {
         "text": "----".repeat(incep) + btext,
@@ -357,69 +480,41 @@ async function printBookmark(bookmark, x){
         })
     a.appendTo(div)
     div.appendTo(rowDiv)
+    //What is this x for?
+    //x is the number of columns needed
     for(var i=0; i < (x - 1); i++){
+        let online;
+        if (!globOnline){
+            online = false
+        }
+        else{
+            online = await checkIfTagged(bookmarkTag, i) 
+        }
         let identification = String(alph[i]) + String(bookmark.id)
         let styleAttribute = "border-bottom: 1px solid; "
         if (i%2==0){
             styleAttribute += "border-left: 1px solid;border-right: 1px solid;"
         }
         let $div = $("<div>", {"class": "grid p-1 flex-fill", id: identification, "style": styleAttribute})
+        $div.on("click", async function(){
+            let type = identification.charAt(0)
+            let id = identification.slice(1)
+            let bookmarkTag = await stored(String(id))
+            let alreadyThere = await checkIfAlready(bookmarkTag, type)
+            console.log(alreadyThere, "Spanish inquistion")
+            if (alreadyThere){
+                console.log("testing")
+                await removeStorage($div, id, type)
+            }
+            else{
+                console.log("testing1")
+                await setStorage($div, id, type)
+            }            
+
+        })
         $div.appendTo(rowDiv)
-        switch(i){    
-            case 0: 
-                $($div).hover(function () {
-                    $(this).css("background-color", "#ED6A5A")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 1:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#F4F1BB")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 2:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#9BC1BC")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 3:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#2CC1CC")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 4:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#E6EBE0")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 5:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#4C56DB")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            case 6:
-                $($div).hover(function () {
-                    $(this).css("background-color", "#916482")
-                }, function () {
-                        $(this).css("background-color", "#778899")
-                })
-                break
-            default:
-                console.log("What the mario")
-                break
-                
-        }
+        //First check if it has any tag at all bcz most of them won't
+        simpleHover($div, online, colours[i], "#778899")
     }
     rowDiv.appendTo("#grid")
 

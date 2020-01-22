@@ -33,6 +33,11 @@ box-shadow: none;
 -moz-box-shadow: none;
 -webkit-box-shadow: none;
 }
+.collapsing {
+    -webkit-transition: none;
+    transition: none;
+    display: none;
+}
 </style>
 </head>
     <body>
@@ -60,23 +65,42 @@ box-shadow: none;
         <div id="load"></div>
         <div id="popDiv" style="display: none"></div>
 
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="allTagsModal" tabindex="-1" role="dialog" aria-labelledby="allTagsModalTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 id="modalTitle" class="modal-title"></h5>
+                  <h5 id="modalTagTitle" class="modal-title"></h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body" id="modal-information">
+                <div class="modal-body" id="modal-tag-information">
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" id="saveChangesModal" data-dismiss="modal">Save & Close</button>
+                  <button type="button" class="btn btn-primary" id="saveTagChangesModal" data-dismiss="modal">Save & Close</button>
                 </div>
               </div>
             </div>
         </div>
+
+        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="modalContentInfo">
+              <div class="modal-header">
+                <h5 id="modalTitle" class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="modal-information">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveChangesInfoModal" data-dismiss="modal">Save & Close</button>
+              </div>
+            </div>
+          </div>
+      </div>
     </body>
 </html>

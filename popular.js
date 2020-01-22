@@ -15,7 +15,7 @@ function onPopClick() {
                     for (var x=0; x < result[i].children.length; x++){
                         let data = result[i].children
                         let title = data[x].title.toLowerCase()
-                        if (title.includes(input)){
+                        if (title.includes(searchVal)){
                             filteredList.push(data[x])
                         }
                     }

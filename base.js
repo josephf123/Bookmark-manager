@@ -1,7 +1,5 @@
 //Things to do before release,
 // Make pop work again
-// Add and delete tags
-//Make the tags visible in the tag menu
 // rename nav stuff
 //Add settings to change colours of bookmarks etc.
 
@@ -22,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     initialize(); 
     onPopClick();
     iconEvent();
+    console.log(await stored("7"))
     $("#tags").on("click", function (){
         window.location.href = "test.html"
     })
@@ -37,14 +36,30 @@ document.addEventListener('DOMContentLoaded', async function () {
     $("#launchTagModal").on("click", function(){
         launchTagModal()
     })
-
-    $(".delete-tag").on("click", function(){
-        console.log("hihihih")
-        let id = this.id
-        console.log(id)
+    // $('#allTagsModal').on('shown.bs.modal', function (e) {
+    //     $(".delete-tag").on("click", function(){
+    //         let id = this.id
+    //         console.log(id)
+    //         deleteTag(id)
+    //     })
+    //     $("#confirmButton").on("click", function(){
+    //         let input = $("#newTag").val()
+    //         addTag(input)
+    //         $("#newTag").val("")
+    //     })
+    //   });
+    $("#allTagsModal").on("click", ".delete-tag", function(){
+        deleteTag(this.id)
     })
+    $("#allTagsModal").on("click", "#confirmButton", function(){
+        let input = $("#newTag").val()
+        addTag(input)
+        $("#newTag").val("")
+    })
+    
 
-    $("#saveChangesModal").on("click", function(){
+    $("#saveChangesInfoModal").on("click", function(){
+        //This has to be changed when the data structure changes because it is specific
         let modalInfo = $("#modal-information")
         let modalContentId = $(".modal-content")[0].id
         let modalObject = findIt(result, modalContentId)
@@ -57,13 +72,28 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.log(e.target.value)
         searchFun(e.target.value)
     })
-    chrome.storage.local.set({"tags":"Work,Entertainment,For Later,Sports,Philosophy,Music,Funny"})
-    
-
-    
-
-
+    await makeStorage("tags", "Work,Entertainment,For Later,Sports,Philosophy,Music,Funny,")
 })
+
+async function addTag(input){
+    let tags = await stored("tags")
+    let newIn = input.charAt(0).toUpperCase() + input.slice(1)
+    let newTag = tags + newIn + ","
+    await makeStorage("tags", newTag)
+    launchTagModal()
+    console.log(newTag)
+}
+
+async function deleteTag(identification){
+    let tags = await stored("tags")
+    console.log(tags)
+    let regString =  identification + ","
+    let regex = new RegExp(regString)
+    let newTag = tags.replace(regex, "")
+    await makeStorage("tags", newTag)
+    launchTagModal()
+    console.log(newTag)    
+}
 
 function searchFun(input){
     let all = $("#load").children()
@@ -114,13 +144,7 @@ function searchFun(input){
             }
 
         }
-
-        
-            
-
-    
     }
-    
     iconEvent()
     initializeFolderOpen()
 }
@@ -169,11 +193,13 @@ async function saveChangesModal(id, text){
 
 async function displayModalInfo(identification) {
     $("#modal-information").empty()
-    $(".modal-content").attr('id', identification)
+    $("#modalContentInfo").attr('id', identification)
+    console.log("testing")
     let data = findIt(result, identification)
     console.log(data)
     let tags = await stored(identification)
     tags = tags.split(",")
+    tags.pop()
     let row = $("<div class='row margin'></div>")
     let urlTitle = $("<div>URL: </div>")
     let url = $("<a>",{
@@ -209,7 +235,7 @@ async function displayModalInfo(identification) {
     $("#modal-information").append(infoTitle)
     $("#modal-information").append(infoSubscript)
     $("#modal-information").append(textbox)
-    $("#exampleModalCenter").modal('show')
+    $("#infoModal").modal('show')
 }
 
 
@@ -222,39 +248,56 @@ function iconEvent(){
 }
 
 async function launchTagModal(){
-    $("#modal-information").empty()
-    $("#modalTitle").text("Tags")
+    $("#modal-tag-information").empty()
+    $("#modalTagTitle").text("Tags")
     let tag = await stored("tags")
     tag = tag.split(',')
+    tag.pop()
     console.log(tag)
     for(var i=0; i < tag.length; i++){
-
         let tagName = $("<div>", {
-            "text": tag[i],
-            "class": "d-flex ",
-            "style": "vertical-align: middle"
+            "class": "d-flex",
+            "style": "display: table"
         })
         let button = $("<button>", {
-            "class": "d-flex btn ml-auto delete-tag",
+            "class": "d-flex btn btn-danger ml-auto delete-tag",
             "text": "delete",
             "style": "float:left",
             "id": tag[i], 
         })
-        
+        let tagText = $("<div>", {
+            "text": tag[i], 
+            "style": "display:table-cell; vertical-align: middle",
+            "class": "mt-1 ml-1"
+        })
+        tagName.append(tagText)
         tagName.append(button)
-        // let icon = $('<i>',{
-        //     "class": "d-inline-flex material-icons icon align-middle delete-tag",
-        //     "id": tag[i],
-        //     "text": "delete",
-        //     "style": "z-index:1"
-        // })
+
         if ((i + 1) % 2 == 0){
             tagName.css("border-top", "1px solid #dee2e6")
             tagName.css("border-bottom", "1px solid #dee2e6")
         }
-        $("#modal-information").append(tagName)
+        $("#modal-tag-information").append(tagName)
     }
-    $("#exampleModalCenter").modal('show')
+    let bigDiv = $("<div>", {
+        "class": "d-flex flex-row my-2",
+        "id": "bigDiv"
+    })
+    let tagInput = $("<input>", {
+        "id": "newTag",
+        "class": "d-flex form-control",
+        "placeholder": "Enter new tag name"
+    })
+    let confirmButton = $("<button>", {
+        "id": "confirmButton",
+        "text": "Confirm",
+        "class": "d-flex btn btn-success",
+    })
+    $("#modal-tag-information").append(bigDiv)
+    $("#bigDiv").append(tagInput)
+    $("#bigDiv").append(confirmButton)
+    
+    $("#allTagsModal").modal('show')
 
 }
 
@@ -283,7 +326,7 @@ var stored = function (id){
                 resolve(res[id])
             }
             else{
-                resolve("none")
+                resolve("")
             }
     
         })
