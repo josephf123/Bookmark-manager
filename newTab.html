@@ -38,26 +38,39 @@ box-shadow: none;
     transition: none;
     display: none;
 }
+.form-control ::-webkit-input-placeholder { 
+  position: relative;
+  left: 20px;
+}
+.form-control input{
+  padding-left: 35px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%
+}
+
 </style>
 </head>
     <body>
         <script src="base.js"></script>
         <script src="popular.js"></script>
         <script src="bookmarkFolder.js"></script>
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-default" id="theNav" style="background-color: #E9ECEF;z-index: 2;">
             <div class="container-fluid">
               <div class="navbar-header container-fluid">
                 <a class="navbar-brand" id="mostPop" href="#">Most popular</a>
-                <a class="navbar-brand" id="tags" href="#">Tags</a>
+                <a class="navbar-brand" id="tags" href="#">Manage tags</a>
                 <a class="navbar-brand" id="clearTags" href="#">Clear Tags</a>
                 <a class="navbar-brand" id="clearInfo" href="#">Clear Info</a>
                 <button id="launchTagModal" type="button" class="btn btn-primary">All tags</button>
-                <h1 class="form-inline ml-auto my-1" style="float: right;font-weight: 900;">Welcome to your bookmark manager</h1>
               </div>
               </div>
             </div>
           </nav>
-        <div class="jumbotron jumbotron-fluid py-2 px-6 mx-1" id="heading" style="border-radius: 40px;">
+        <div class="jumbotron jumbotron-fluid pb-2 px-4 mx-0" id="heading" style="border-radius: 40px; padding-top: 80px;">
             <div class="md-form px-3">
               <input class="form-control" id="searchButton" type="text" placeholder="Search" aria-label="Search" style="border-radius: 35px; font-size: xx-large;" autocomplete="off">
             </div>

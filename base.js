@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     initialize(); 
     onPopClick();
     iconEvent();
+    stickyNav();
+    clicka();
     console.log(await stored("7"))
     $("#tags").on("click", function (){
         window.location.href = "test.html"
@@ -60,13 +62,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     $("#saveChangesInfoModal").on("click", function(){
         //This has to be changed when the data structure changes because it is specific
-        let modalInfo = $("#modal-information")
-        let modalContentId = $(".modal-content")[0].id
-        let modalObject = findIt(result, modalContentId)
-        let textModal = modalInfo[0].children[5].value
-        let titleModal = modalObject.title
-        let urlModal = modalObject.url
-        saveChangesModal(modalContentId,textModal)
+        let textModal = $("textarea")[0].value
+        let id = $("textarea")[0].id.substring(1)
+        saveChangesModal(id,textModal)
     })
     $("#searchButton").on("keyup", function(e) {
         console.log(e.target.value)
@@ -74,6 +72,25 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
     await makeStorage("tags", "Work,Entertainment,For Later,Sports,Philosophy,Music,Funny,")
 })
+function clicka(){
+    $("a.clickable").on("click", ".icon", function(e){
+        e.preventDefault();
+    })
+}
+
+
+function stickyNav(){
+    let navbar = $("#theNav")
+    console.log(navbar[0])
+    var sticky = navbar[0].offsetTop
+    console.log(sticky)
+    if (window.pageYOffset >= sticky) {
+        navbar[0].classList.add("sticky")
+    } 
+    else {
+        navbar[0].classList.remove("sticky");
+    }
+}
 
 async function addTag(input){
     let tags = await stored("tags")
@@ -95,15 +112,22 @@ async function deleteTag(identification){
     console.log(newTag)    
 }
 
-function searchFun(input){
+async function searchFun(input){
     let all = $("#load").children()
     for(var i=0; i < all.length; i++){
         all[i].remove()
     }
     input = String(input).toLowerCase();
+    
     for(var i=0; i < result.length; i++){
         let title = result[i].title.toLowerCase()
-        if (title.includes(input)){
+        let tags = await stored(result[i].id)
+        tags = tags.toLowerCase()
+        let info = await stored("i" + result[i].id)
+        info = info.toLowerCase()
+        let all = tags + title + info
+        console.log(all)
+        if (all.includes(input)){
             console.log("The thing is " + result[i].title)
             if (!result[i].children){
                 let bookmark = new Bookmark(result, result[i])
@@ -124,7 +148,12 @@ function searchFun(input){
             for (var x=0; x < result[i].children.length; x++){
                 let data = result[i].children
                 let title = data[x].title.toLowerCase()
-                if (title.includes(input)){
+                let tags = await stored(data[x].id)
+                tags = tags.toLowerCase()
+                let info = await stored("m" + data[x].id)
+                info = info.toLowerCase()
+                let all = tags + title + info
+                if (all.includes(input)){
                     //Make it so that if input matches with child of folder, only output folder. Right now there is a problem with duplication so try and fix that
                     console.log("The thing is " + data[x].title)
                     let bookmark = new Bookmark(result, data[x])
@@ -219,6 +248,13 @@ async function displayModalInfo(identification) {
         })
         tag.appendTo(ul)
     }
+    if (tags.length == 0){
+        let tag = $("<li>", {
+            text: "None so far!",
+            class: "margin"
+        })
+        tag.appendTo(ul)
+    }
     let infoTitle = $("<p class='margin d-inline-flex'>Info:</p>")
     let infoSubscript = $("<p class='margin d-inline-flex' style='float:right; color: #A9A9A9'>max chars: 200</p>")
     let textInformation = await stored("i" + identification)
@@ -229,7 +265,9 @@ async function displayModalInfo(identification) {
         row: "5",
         style: "margin-left: 45px; width:405px;", 
         text: textInformation, maxlength: "200", 
-        class : "form-control"})
+        class : "form-control",
+        id: "m" + identification
+    })
     $("#modal-information").append(tagParagraph)
     $("#modal-information").append(ul)
     $("#modal-information").append(infoTitle)
@@ -437,7 +475,7 @@ function checkIncep(object) {
 
 function onClickOpen(object) {
     let buttonId = "#" + String(object.id)
-    $(buttonId).on("click", function () {
+    $(buttonId).on("click", ".notIcon", function () {
         if (!$(buttonId).hasClass("open")) {
             for (var i = object.children.length - 1; i >= 0; i--) {
                 if (!object.children[i].children) {
@@ -447,7 +485,7 @@ function onClickOpen(object) {
                 }
                 else {
                     let folder = new Folder(result, object.children[i])
-                    printFolder(folder, object)
+                    printFolder(folder)
                     onClickOpen(findIt(result, folder.id))
                 }
             }
@@ -475,6 +513,7 @@ function clickClose(obj) {
         let stringId = "#" + String(obj.children[i].id)
         $(stringId).removeClass("open")
         $(stringId).remove()
+        $("#a" + obj.children[i].id).remove()
         $("#b" + obj.children[i].id).remove()
         console.log("successfully killed" + stringId)
 

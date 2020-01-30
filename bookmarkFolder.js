@@ -36,48 +36,51 @@ class Bookmark {
     }
 }
 function printFolder(object) {
-
+    let newDiv;
     switch (object.incep) {
         case 1:
             newDiv = $('<button>', {
-                "class": "folder btn d-inline-flex col-2 m-4 btn-outline-primary btn-lg",
+                "class": "folder btn d-inline-flex col-2 m-3 btn-outline-primary btn-lg notIcon",
                 "id": object.id
+                
             })
             break;
         case 2:
             newDiv = $('<button>', {
-                "class": "folder btn d-inline-flex col-2 m-4 btn-outline-warning btn-lg text-dark",
+                "class": "folder btn d-inline-flex col-2 m-3 btn-outline-warning btn-lg text-dark notIcon",
                 "id": object.id
             })
             break;
         case 3:
             newDiv = $('<button>', {
-                "class": "folder btn d-inline-flex col-2 m-4 btn-outline-success btn-lg",
+                "class": "folder btn d-inline-flex col-2 m-3 btn-outline-success btn-lg notIcon",
                 "id": object.id
             })
             break;
         case 4:
             newDiv = $('<button>', {
-                "class": "folder btn d-inline-flex col-2 m-4 btn-lg",
+                "class": "folder btn d-inline-flex col-2 my-3 btn-lg notIcon",
                 "id": object.id,
-                "style": "background-color: #2BBBAD "
+                "style": "background-color: #2BBBAD; margin: 0px 18px 0px 18px "
             })
             break;
 
     }
+    let rowDivision = $("<div class='d-flex flex-row flex-fill' style='overflow-wrap: break-word;'></div>")
     let emptySpace = $('<p>',{
-        "style": "width:20%"
+        "style": "width:20%",
+        "class": "notIcon flex-fill"
     })
-    let bookmarkTitle = $("<p class='p-2'>" + object.title + "</p>")
-    bookmarkTitle.appendTo(newDiv);
+    let bookmarkTitle = $("<p class='pl-1 py-2 notIcon flex-fill'>" + object.title + "</p>")
     let icon = $('<i>',{
-        "class": "d-inline-flex material-icons icon mt-1 item-info",
+        "class": "material-icons icon mt-1 item-info flex-fill",
         "id": "b" + object.id,
         "text": "info",
-        "style": "z-index:1;position:relative;"
     })
-    icon.appendTo(newDiv)
-    
+    bookmarkTitle.appendTo(rowDivision);
+    emptySpace.appendTo(rowDivision)
+    icon.appendTo(rowDivision)
+    rowDivision.appendTo(newDiv)
     if (arguments.length == 2) {
         var parent = "#" + String(arguments[1].id)
         $(parent).after(newDiv)
@@ -89,18 +92,18 @@ function printFolder(object) {
 }
 
 function printBookmark(object) {
-
+    let newDiv;
     switch (object.incep) {
         case 1:
             newDiv = $('<div>', {
-                "class": "bookmark btn col-2 m-3 btn-sm",
+                "class": "bookmark btn col-2 mx-0 my-3 btn-sm",
                 "style": "background-color: #2BBBAD; font-size: 120%;",
                 "id": object.id
             })
             break;
         case 2:
             newDiv = $('<button>', {
-                "class": "bookmark btn d-inline-flex col-2 m-3 btn-danger btn-sm",
+                "class": "bookmark btn d-inline-flex col-2 mx-0 my-3 btn-danger btn-sm",
                 "style": "font-size: 120%; color: black",
                 "id": object.id
 
@@ -108,14 +111,14 @@ function printBookmark(object) {
             break;
         case 3:
             newDiv = $('<button>', {
-                "class": "bookmark btn d-inline-flex col-2 m-3 btn-sm",
+                "class": "bookmark btn d-inline-flex col-2 mx-0 my-3 btn-sm",
                 "style": "background-color: #ff5722;font-size: 120% ",
                 "id": object.id
             })
             break;
         case 4:
             newDiv = $('<button>', {
-                "class": "bookmark btn d-inline-flex col-2 m-3 btn-dark-green btn-sm text-light",
+                "class": "bookmark btn d-inline-flex col-2 mx-0 my-3 btn-dark-green btn-sm text-light",
                 "style": "background-color: #673ab7; font-size: 120%",
                 "id": object.id,
             })
@@ -123,16 +126,16 @@ function printBookmark(object) {
     let newClickable = $('<a>', {
         "href": object.url,
         "style": "text-decoration: none;",
-        "class": "m-0",
+        "class": "m-3 clickable",
         "id": "a" + object.id
         
     })    
     
 
-    let rowDivision = $("<div class='row margin' style='overflow-wrap: break-word;'></div>")
+    let rowDivision = $("<div class='d-flex flex-row margin' style='overflow-wrap: break-word;'></div>")
     let textOnly = $("<p>",{
         "style": "width:70%;",
-        "class":"d-flex",
+        "class":"d-inline-flex",
         "text": object.title
     })
 
@@ -141,10 +144,9 @@ function printBookmark(object) {
     }
     
     let icon = $('<i>',{
-        "class": "d-inline-flex material-icons icon mt-1 item-info",
+        "class": "d-inline-flex material-icons icon mt-1 item-info ml-auto",
         "id": "b" + object.id,
         "text": "info",
-        "style": "z-index:1;position:relative;right:60px"
     })
     icon.hover(function(){
         icon.css("cursor", "pointer")
@@ -162,6 +164,7 @@ function printBookmark(object) {
     
     textOnly.appendTo(rowDivision)
     emptySpace.appendTo(rowDivision)
+    icon.appendTo(rowDivision)
     rowDivision.appendTo(newDiv)
     newDiv.appendTo(newClickable);
     newDiv.hover(function () {
@@ -183,7 +186,7 @@ function printBookmark(object) {
         newClickable.appendTo(parent)
 
     }
-    newClickable.after(icon)
+    
 
 }
 
