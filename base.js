@@ -1,6 +1,6 @@
 //Things to do before release,
-// Make pop work again
-// rename nav stuff
+//Fix tag manager (can't add folder tags)
+//Make sticky nav bar
 //Add settings to change colours of bookmarks etc.
 
 var result;
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.log(e.target.value)
         searchFun(e.target.value)
     })
-    await makeStorage("tags", "Work,Entertainment,For Later,Sports,Philosophy,Music,Funny,")
+    await makeStorage("tags", "Work,Entertainment,For Later,")
 })
 function clicka(){
     $("a.clickable").on("click", ".icon", function(e){
@@ -280,6 +280,8 @@ async function displayModalInfo(identification) {
 
 function iconEvent(){
     $(".item-info").on("click", function(){
+    }, false)
+    $(".item-info").on("click", function(){
         let id = this.id.slice(1)
         displayModalInfo(id)
     })
@@ -475,7 +477,7 @@ function checkIncep(object) {
 
 function onClickOpen(object) {
     let buttonId = "#" + String(object.id)
-    $(buttonId).on("click", ".notIcon", function () {
+    $(buttonId).on("click", function () {
         if (!$(buttonId).hasClass("open")) {
             for (var i = object.children.length - 1; i >= 0; i--) {
                 if (!object.children[i].children) {

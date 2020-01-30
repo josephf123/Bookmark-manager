@@ -4,10 +4,9 @@
   "description": "Organises your bookmarks",
   "permissions": ["declarativeContent", "storage", "activeTab", "bookmarks", "history"],
   "icons": {
-    "16": "bookmark-icon.png",
-    "32": "bookmark-icon.png",
-    "48": "bookmark-icon.png",
-    "128": "bookmark-icon.png"
+    "16": "images/bookmark-icon-16.png",
+    "48": "images/bookmark-icon-48.png",
+    "128": "images/bookmark-icon-128.png"
   },
   "chrome_url_overrides" : {
     "newtab" : "newTab.html"
@@ -19,7 +18,7 @@
   "browser_action": {
     "default_popup": "test.html",
     "default_title": "Manage bookmarks",
-    "default_icon": "bookmark-icon.png"
+    "default_icon": "images/bookmark-icon-128.png"
   },
   "content_security_policy":
   "script-src 'self' https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js https://fonts.googleapis.com ;  object-src 'self'",

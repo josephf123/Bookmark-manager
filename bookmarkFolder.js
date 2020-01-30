@@ -66,7 +66,7 @@ function printFolder(object) {
             break;
 
     }
-    let rowDivision = $("<div class='d-flex flex-row flex-fill' style='overflow-wrap: break-word;'></div>")
+    let rowDivision = $("<div class='d-flex flex-row flex-fill notIcon' style='overflow-wrap: break-word;'></div>")
     let emptySpace = $('<p>',{
         "style": "width:20%",
         "class": "notIcon flex-fill"
