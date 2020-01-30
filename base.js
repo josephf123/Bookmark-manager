@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     clicka();
     console.log(await stored("7"))
     $("#tags").on("click", function (){
-        window.location.href = "test.html"
+        window.location.href = "tagManage.html"
     })
     $("#clearTags").on("click", function (){
         clearTags(result)

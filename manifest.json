@@ -1,7 +1,7 @@
 {
-  "name": "getting started",
+  "name": "Bookmark organiser",
   "version": "1.0",
-  "description": "Build an Extension!",
+  "description": "Organises your bookmarks",
   "permissions": ["declarativeContent", "storage", "activeTab", "bookmarks", "history"],
   "icons": {
     "16": "bookmark-icon.png",
