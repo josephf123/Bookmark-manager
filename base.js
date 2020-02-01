@@ -14,6 +14,10 @@ var search = new Promise(function (resolve, reject) {
     })
 })
 
+chrome.runtime.onInstalled.addListener(async function() {
+    await makeStorage("tags", "Work,Entertainment,For Later,")
+})
+
 document.addEventListener('DOMContentLoaded', async function () {
     await search;
     console.log(result)
@@ -70,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.log(e.target.value)
         searchFun(e.target.value)
     })
-    await makeStorage("tags", "Work,Entertainment,For Later,")
+    //await makeStorage("tags", "Work,Entertainment,For Later,")
 })
 function clicka(){
     $("a.clickable").on("click", ".icon", function(e){
@@ -292,6 +296,8 @@ async function launchTagModal(){
     $("#modalTagTitle").text("Tags")
     let tag = await stored("tags")
     tag = tag.split(',')
+    console.log(tag)
+
     tag.pop()
     console.log(tag)
     for(var i=0; i < tag.length; i++){
