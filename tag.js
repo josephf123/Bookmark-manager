@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     let colNum = await findColNum()
     await title()
     await grid(colNum + 1,counting(result))
+    tagStickyNav()
     clickRemove()
     $("#why").on("click"), function(){
         console.log("testing baby")
@@ -40,6 +41,19 @@ window.addEventListener('load', (event) => {
 });
 
 
+function tagStickyNav(){
+    let navbar = $("#titleRow")
+    console.log(navbar[0])
+    var sticky = navbar[0].offsetTop
+    console.log(sticky)
+    if (window.pageYOffset >= sticky) {
+        navbar[0].classList.add("sticky")
+    } 
+    else {
+        navbar[0].classList.remove("sticky");
+    }
+}
+
 async function title(){
     console.log("hihihi")
 
@@ -47,7 +61,7 @@ async function title(){
     colNames = colNames.split(",")
     colNames.pop()
     console.log(colNames)
-    let $row = $("<div>", {"class": "row d-flex", "style": "flex:1"})
+    let $row = $("<div>", {"class": "row d-flex", "style": "flex:1", "id": "titleRow"})
     let $title = $("<div>", {"class": "col-5 p-1", "text": "Bookmark title", "style": "border-style:solid none solid solid; border-width: 1px"})
     $title.appendTo($row)
     for(var i=0; i < colNames.length; i++){
