@@ -209,12 +209,10 @@ function clearTags(res){
         else{
             let resId = res[i].id
             chrome.storage.local.remove(resId, function(){
-                console.log("All are cleared")
+                console.log("All are cleared!")
             })
         }
     }
-    
-    
 }
 
 async function saveChangesModal(id, text){
